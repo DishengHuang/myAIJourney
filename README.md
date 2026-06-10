@@ -25,15 +25,16 @@ The next build adds its planet to the voyage automatically.
 
 ```bash
 npm install
-npm run dev      # local dev at http://localhost:4321/myAIJourney
+npm run dev      # local dev at http://localhost:4321
 npm run build    # production build to dist/
 npm run preview  # preview the production build
 ```
 
 ## Deploy
 
-Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds
-and publishes to GitHub Pages. One-time setup in the GitHub repo:
-Settings → Pages → Source: **GitHub Actions**.
+The site is deployed on Vercel. To redeploy, ask Claude (via the Vercel
+connector) or push to the connected git repo.
 
-If the repo is renamed, update `base` in `astro.config.mjs` to match.
+Alternative: GitHub Pages via `.github/workflows/deploy.yml` — for that,
+set `site`/`base` in `astro.config.mjs` (base must match the repo name)
+and enable Settings → Pages → Source: **GitHub Actions**.
