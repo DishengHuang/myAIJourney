@@ -1,4 +1,8 @@
+import * as THREE from 'three';
 import { startStarfield } from '../stars2d.js';
+import { createStage } from './scene.js';
+import { addStarfield, addNebula } from './starfield.js';
+import { createVoyagePath } from './cameraPath.js';
 
 export function boot() {
   const data = JSON.parse(document.getElementById('voyage-data').textContent);
@@ -8,6 +12,7 @@ export function boot() {
     showFallback();
     return;
   }
+  document.getElementById('scene-root').hidden = false;
   initVoyage(data);
 }
 
@@ -29,6 +34,42 @@ function webglAvailable() {
 }
 
 function initVoyage(posts) {
-  // 3D scene wired up in Task 5. Until then, show the fallback.
-  showFallback();
+  const canvas = document.getElementById('voyage-canvas');
+  const labelsEl = document.getElementById('labels');
+  const { renderer, labelRenderer, scene, camera } = createStage(canvas, labelsEl);
+
+  const curve = createVoyagePath(posts.length);
+  const updaters = [];
+  const depth = 28 * posts.length + 60;
+  addStarfield(scene, depth);
+  addNebula(scene, curve);
+
+  document.getElementById('scroll-space').style.height =
+    `${(posts.length + 2) * 150}vh`;
+
+  addEventListener(
+    'scroll',
+    () => document.getElementById('scroll-hint').classList.toggle('hidden', scrollY > 40),
+    { passive: true }
+  );
+
+  let running = true;
+  document.addEventListener('visibilitychange', () => {
+    running = !document.hidden;
+  });
+
+  const clock = new THREE.Clock();
+  renderer.setAnimationLoop(() => {
+    if (!running) return;
+    const t = clock.getElapsedTime();
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = Math.min(max > 0 ? scrollY / max : 0, 0.999);
+    camera.position.copy(curve.getPointAt(p));
+    camera.lookAt(curve.getPointAt(Math.min(p + 0.015, 1)));
+    for (const u of updaters) u(t);
+    renderer.render(scene, camera);
+    labelRenderer.render(scene, camera);
+  });
+
+  return { scene, camera, curve, updaters };
 }
