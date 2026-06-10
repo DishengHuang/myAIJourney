@@ -1,5 +1,7 @@
 # My AI Journey
 
+**Live site: https://dishenghuang.github.io/myAIJourney/**
+
 A personal blog about my AI story — rendered as a 3D space voyage.
 Each post is a glowing planet along a scroll-driven flight from a
 robotics lab through a nebula. Built with Astro 5 + Three.js.
