@@ -4,6 +4,7 @@ import { createStage } from './scene.js';
 import { addStarfield, addNebula } from './starfield.js';
 import { createVoyagePath } from './cameraPath.js';
 import { addWaypoints } from './waypoints.js';
+import { addLab } from './lab.js';
 
 export function boot() {
   const data = JSON.parse(document.getElementById('voyage-data').textContent);
@@ -56,6 +57,9 @@ function initVoyage(posts) {
     const hit = ray.intersectObjects(waypoints.clickable, false)[0];
     if (hit?.object.userData.url) location.href = hit.object.userData.url;
   });
+
+  const lab = addLab(scene);
+  updaters.push(lab.update);
 
   document.getElementById('scroll-space').style.height =
     `${(posts.length + 2) * 150}vh`;
