@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+const { title, date, excerpt } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const dateStr = date.toISOString().slice(0, 10);
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={excerpt} />
+    <title>{title} — My AI Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <canvas id="stars-2d" aria-hidden="true"></canvas>
+    <main class="log-wrap">
+      <article class="log-panel">
+        <p class="log-meta">MISSION LOG — {dateStr}</p>
+        <h1>{title}</h1>
+        <div class="log-body"><slot /></div>
+        <a class="log-back" href={`${base}/`}>&larr; Return to voyage</a>
+      </article>
+    </main>
+    <style>
+      #stars-2d { position: fixed; inset: 0; z-index: -1; }
+      .log-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 1.25rem; }
+      .log-panel {
+        max-width: 720px;
+        background: var(--panel);
+        border: 1px solid rgba(0, 229, 255, 0.35);
+        border-radius: 14px;
+        box-shadow: 0 0 24px rgba(0, 229, 255, 0.18), inset 0 0 40px rgba(0, 229, 255, 0.04);
+        backdrop-filter: blur(6px);
+        padding: 2.5rem 2.75rem;
+      }
+      .log-meta { color: var(--cyan); font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.2em; margin: 0 0 0.5rem; }
+      .log-panel h1 { margin: 0 0 1.25rem; font-size: 1.7rem; color: var(--ink); }
+      .log-body { color: var(--ink-dim); }
+      .log-body :global(p) { margin: 0 0 1rem; }
+      .log-back { display: inline-block; margin-top: 1.5rem; font-family: var(--font-display); font-size: 0.85rem; text-decoration: none; }
+      .log-back:hover { text-shadow: 0 0 8px var(--cyan); }
+    </style>
+    <script>
+      import { startStarfield } from '../scripts/stars2d.js';
+      startStarfield(document.getElementById('stars-2d'));
+    </script>
+  </body>
+</html>
