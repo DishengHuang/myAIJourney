@@ -3,6 +3,7 @@ import { startStarfield } from '../stars2d.js';
 import { createStage } from './scene.js';
 import { addStarfield, addNebula } from './starfield.js';
 import { createVoyagePath } from './cameraPath.js';
+import { addWaypoints } from './waypoints.js';
 
 export function boot() {
   const data = JSON.parse(document.getElementById('voyage-data').textContent);
@@ -43,6 +44,18 @@ function initVoyage(posts) {
   const depth = 28 * posts.length + 60;
   addStarfield(scene, depth);
   addNebula(scene, curve);
+
+  const waypoints = addWaypoints(scene, posts);
+  updaters.push(waypoints.update);
+
+  const ray = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  addEventListener('click', (e) => {
+    mouse.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    ray.setFromCamera(mouse, camera);
+    const hit = ray.intersectObjects(waypoints.clickable, false)[0];
+    if (hit?.object.userData.url) location.href = hit.object.userData.url;
+  });
 
   document.getElementById('scroll-space').style.height =
     `${(posts.length + 2) * 150}vh`;
