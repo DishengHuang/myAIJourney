@@ -1,0 +1,25 @@
+:root {
+  --bg: #030412;
+  --ink: #e8f1ff;
+  --ink-dim: #8da3c0;
+  --cyan: #00e5ff;
+  --pink: #ff6ec7;
+  --purple: #7b2ff7;
+  --panel: rgba(10, 16, 38, 0.72);
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.7;
+}
+
+h1, h2, h3 { font-family: var(--font-display); letter-spacing: 0.04em; }
+
+a { color: var(--cyan); }
